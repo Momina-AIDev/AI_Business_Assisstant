@@ -1,9 +1,22 @@
-import { useState } from "react";
+
+import { useState, useRef, useEffect } from "react";
+import "./App.css";
+
+import Header from "./components/Header";
+import ChatWindow from "./components/ChatWindow";
+import MessageInput from "./components/MessageInput";
 
 function App() {
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(false);
+  const chatEndRef = useRef(null);
+
+  useEffect(() => {
+  chatEndRef.current?.scrollIntoView({
+    behavior: "smooth",
+  });
+}, [messages, loading]);
 
   async function sendMessage() {
     if (!message.trim()) return;
@@ -57,49 +70,24 @@ function App() {
     }
   }
 
-  return (
-    <div style={{ padding: "40px" }}>
-      <h1>AI Business Assistant</h1>
+ return (
+  <div className="app">
+    <Header />
 
-      <input
-        type="text"
-        placeholder="Type your message..."
-        value={message}
-        onChange={(e) => setMessage(e.target.value)}
-        style={{
-          width: "300px",
-          padding: "10px",
-          marginRight: "10px",
-        }}
-        onKeyDown={(e) => {
-          if (e.key === "Enter") {
-            sendMessage();
-          }
-        }}
-      />
+    <ChatWindow
+      messages={messages}
+      loading={loading}
+      chatEndRef={chatEndRef}
+    />
 
-      <button onClick={sendMessage} disabled={loading}>
-        {loading ? "Sending..." : "Send"}
-      </button>
-
-      <hr />
-
-      <div>
-        {messages.map((msg, index) => (
-          <p key={index}>
-            <strong>{msg.sender === "user" ? "You" : "AI"}:</strong>{" "}
-            {msg.text}
-          </p>
-        ))}
-
-        {loading && (
-          <p>
-            <strong>AI:</strong> Thinking...
-          </p>
-        )}
-      </div>
-    </div>
-  );
+    <MessageInput
+      message={message}
+      setMessage={setMessage}
+      sendMessage={sendMessage}
+      loading={loading}
+    />
+  </div>
+);
 }
 
 export default App;
