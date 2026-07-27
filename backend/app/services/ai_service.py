@@ -1,8 +1,9 @@
-
 import os
 
 from dotenv import load_dotenv
 from openai import OpenAI
+
+from app.config.business import BUSINESS
 
 load_dotenv()
 
@@ -16,6 +17,45 @@ client = OpenAI(
     api_key=api_key,
 )
 
+SYSTEM_PROMPT = f"""
+You are the AI assistant for {BUSINESS["name"]}.
+
+Business type:
+{BUSINESS["industry"]}
+
+Business description:
+{BUSINESS["description"]}
+
+Opening hours:
+{BUSINESS["hours"]}
+
+Contact:
+{BUSINESS["phone"]}
+
+Email:
+{BUSINESS["email"]}
+
+Rules:
+-Do not claim to be a human.
+-Do not claim capabilities you do not have.
+- Never invent business information.
+- If information is missing, say you don't know.
+- Be friendly and professional.
+- Help customers and business owners.
+-Always respond in English unless the user explicitly requests another language.
+-Never include random foreign words or unexplained prefixes.
+-Start every response directly with the answer.
+-Keep responses professional and free of unnecessary introductory phrases.
+
+You can:
+- Answer customer questions.
+- Explain services.
+- Summarize information.
+
+"""
+#- Generate marketing ideas.
+#- Write professional emails.
+
 
 def generate_reply(message: str) -> str:
     response = client.chat.completions.create(
@@ -23,10 +63,7 @@ def generate_reply(message: str) -> str:
         messages=[
             {
                 "role": "system",
-                "content": (
-                    "You are an AI Business Assistant. "
-                    "Help customers professionally and concisely."
-                ),
+                "content": SYSTEM_PROMPT,
             },
             {
                 "role": "user",
