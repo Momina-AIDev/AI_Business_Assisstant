@@ -56,20 +56,20 @@ You can:
 #- Generate marketing ideas.
 #- Write professional emails.
 
+def generate_reply(messages: list) -> str:
 
-def generate_reply(message: str) -> str:
+    conversation = [
+        {
+            "role": "system",
+            "content": SYSTEM_PROMPT,
+        }
+    ]
+
+    conversation.extend(messages)
+
     response = client.chat.completions.create(
         model="openai/gpt-oss-20b:free",
-        messages=[
-            {
-                "role": "system",
-                "content": SYSTEM_PROMPT,
-            },
-            {
-                "role": "user",
-                "content": message,
-            },
-        ],
+        messages=conversation,
     )
 
     return response.choices[0].message.content

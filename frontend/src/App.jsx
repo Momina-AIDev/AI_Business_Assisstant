@@ -1,4 +1,3 @@
-
 import { useState, useRef, useEffect } from "react";
 import "./App.css";
 
@@ -10,20 +9,21 @@ function App() {
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(false);
+
   const chatEndRef = useRef(null);
 
   useEffect(() => {
-  chatEndRef.current?.scrollIntoView({
-    behavior: "smooth",
-  });
-}, [messages, loading]);
+    chatEndRef.current?.scrollIntoView({
+      behavior: "smooth",
+    });
+  }, [messages, loading]);
 
   async function sendMessage() {
     if (!message.trim()) return;
 
     const userMessage = message;
 
-    // Show user message immediately
+    // Show the user's message immediately
     setMessages((prev) => [
       ...prev,
       {
@@ -31,6 +31,18 @@ function App() {
         text: userMessage,
       },
     ]);
+
+    // Build conversation history for the backend
+    const conversation = [
+      ...messages.map((msg) => ({
+        role: msg.sender === "user" ? "user" : "assistant",
+        content: msg.text,
+      })),
+      {
+        role: "user",
+        content: userMessage,
+      },
+    ];
 
     setMessage("");
     setLoading(true);
@@ -42,7 +54,7 @@ function App() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          message: userMessage,
+          messages: conversation,
         }),
       });
 
@@ -70,24 +82,24 @@ function App() {
     }
   }
 
- return (
-  <div className="app">
-    <Header />
+  return (
+    <div className="app">
+      <Header />
 
-    <ChatWindow
-      messages={messages}
-      loading={loading}
-      chatEndRef={chatEndRef}
-    />
+      <ChatWindow
+        messages={messages}
+        loading={loading}
+        chatEndRef={chatEndRef}
+      />
 
-    <MessageInput
-      message={message}
-      setMessage={setMessage}
-      sendMessage={sendMessage}
-      loading={loading}
-    />
-  </div>
-);
+      <MessageInput
+        message={message}
+        setMessage={setMessage}
+        sendMessage={sendMessage}
+        loading={loading}
+      />
+    </div>
+  );
 }
 
 export default App;
