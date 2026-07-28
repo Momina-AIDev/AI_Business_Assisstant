@@ -14,7 +14,7 @@ function ChatWindow({ messages, loading, chatEndRef }) {
       {loading && (
         <MessageBubble
           sender="ai"
-          text="Thinking..."
+          text="Replying..."
         />
       )}
 
