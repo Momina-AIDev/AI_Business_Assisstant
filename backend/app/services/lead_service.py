@@ -1,27 +1,47 @@
 import json
 from pathlib import Path
 
-LEADS_FILE = Path("app/storage/leads.json")
+STORAGE_PATH = Path(__file__).parent.parent / "storage"
+LEADS_FILE = STORAGE_PATH / "leads.json"
 
 
-def save_lead(name: str, phone: str, inquiry: str):
-    with open(LEADS_FILE, "r") as file:
-        leads = json.load(file)
+def save_lead(name: str, phone: str, inquiry: str) -> bool:
 
-    leads.append(
-        {
-            "name": name,
-            "phone": phone,
-            "inquiry": inquiry,
-        }
-    )
+    STORAGE_PATH.mkdir(exist_ok=True)
 
-    with open(LEADS_FILE, "w") as file:
-        json.dump(leads, file, indent=4)
+    if not LEADS_FILE.exists():
+        LEADS_FILE.write_text("[]", encoding="utf-8")
 
-if __name__ == "__main__":
-    save_lead(
-        "Tom",
-        "03001234567",
-        "Interested in booking a table",
-    )
+    try:
+        with open(LEADS_FILE, "r", encoding="utf-8") as f:
+            leads = json.load(f)
+
+            if not isinstance(leads, list):
+                leads = []
+
+    except (json.JSONDecodeError, FileNotFoundError):
+        leads = []
+
+    phone = phone.strip()
+
+    for lead in leads:
+        if lead.get("phone", "").strip() == phone:
+            return False
+
+    new_lead = {
+        "name": name.strip(),
+        "phone": phone,
+        "inquiry": inquiry.strip(),
+    }
+
+    leads.append(new_lead)
+
+    with open(LEADS_FILE, "w", encoding="utf-8") as f:
+        json.dump(
+            leads,
+            f,
+            indent=4,
+            ensure_ascii=False,
+        )
+
+    return True

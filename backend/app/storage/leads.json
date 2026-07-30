@@ -3,5 +3,20 @@
         "name": "Tom",
         "phone": "03001234567",
         "inquiry": "Interested in booking a table"
+    },
+    {
+        "name": "Ali",
+        "phone": "03001234567",
+        "inquiry": "reserve table"
+    },
+    {
+        "name": "Ali",
+        "phone": "03001234567",
+        "inquiry": "reservation"
+    },
+    {
+        "name": "Ali",
+        "phone": "03001234567",
+        "inquiry": "table reservation"
     }
 ]
