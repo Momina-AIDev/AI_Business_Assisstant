@@ -4,9 +4,15 @@ from pathlib import Path
 STORAGE_PATH = Path(__file__).parent.parent / "storage"
 LEADS_FILE = STORAGE_PATH / "leads.json"
 
-
-def save_lead(name: str, phone: str, inquiry: str) -> bool:
-
+def save_lead(
+    name: str,
+    phone: str,
+    inquiry: str,
+    date: str | None = None,
+    time: str | None = None,
+    party_size: int | None = None,
+) -> bool:
+    
     STORAGE_PATH.mkdir(exist_ok=True)
 
     if not LEADS_FILE.exists():
@@ -24,18 +30,19 @@ def save_lead(name: str, phone: str, inquiry: str) -> bool:
 
     phone = phone.strip()
 
-    for lead in leads:
-        if lead.get("phone", "").strip() == phone:
-            return False
 
     new_lead = {
-        "name": name.strip(),
-        "phone": phone,
-        "inquiry": inquiry.strip(),
-    }
-
+    "name": name.strip(),
+    "phone": phone.strip(),
+    "inquiry": inquiry.strip(),
+    "date": date,
+    "time": time,
+    "party_size": party_size,
+}
     leads.append(new_lead)
-
+    print("Saving lead...")
+    print("Path:", LEADS_FILE.resolve())
+    print("New lead:", new_lead)
     with open(LEADS_FILE, "w", encoding="utf-8") as f:
         json.dump(
             leads,

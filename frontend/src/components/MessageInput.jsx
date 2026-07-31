@@ -9,11 +9,11 @@ function MessageInput({
 
       <input
         type="text"
-        placeholder="Type your message..."
+        placeholder="Ask about reservations, menu..."
         value={message}
         onChange={(e) => setMessage(e.target.value)}
         onKeyDown={(e) => {
-          if (e.key === "Enter") {
+          if (e.key === "Enter" && !loading) {
             sendMessage();
           }
         }}
@@ -23,7 +23,7 @@ function MessageInput({
         onClick={sendMessage}
         disabled={loading}
       >
-        {loading ? "Sending..." : "Send"}
+        {loading ? "..." : "Send"}
       </button>
 
     </div>

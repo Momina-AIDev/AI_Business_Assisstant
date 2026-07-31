@@ -4,6 +4,7 @@ import "./App.css";
 import Header from "./components/Header";
 import ChatWindow from "./components/ChatWindow";
 import MessageInput from "./components/MessageInput";
+import QuickActions from "./components/QuickActions";
 
 function App() {
   const [message, setMessage] = useState("");
@@ -18,33 +19,23 @@ function App() {
     });
   }, [messages, loading]);
 
-  async function sendMessage() {
-    if (!message.trim()) return;
+  async function sendMessage(customMessage = null) {
+    const userMessage = customMessage || message;
 
-    const userMessage = message;
+    if (!userMessage.trim()) return;
 
-    // Show the user's message immediately
-    setMessages((prev) => [
-      ...prev,
+    const updatedMessages = [
+      ...messages,
       {
         sender: "user",
         text: userMessage,
       },
-    ]);
-
-    // Build conversation history for the backend
-    const conversation = [
-      ...messages.map((msg) => ({
-        role: msg.sender === "user" ? "user" : "assistant",
-        content: msg.text,
-      })),
-      {
-        role: "user",
-        content: userMessage,
-      },
     ];
 
+    setMessages(updatedMessages);
+
     setMessage("");
+
     setLoading(true);
 
     try {
@@ -54,7 +45,10 @@ function App() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          messages: conversation,
+          messages: updatedMessages.map((msg) => ({
+            role: msg.sender === "user" ? "user" : "assistant",
+            content: msg.text,
+          })),
         }),
       });
 
@@ -74,7 +68,7 @@ function App() {
         ...prev,
         {
           sender: "ai",
-          text: "❌ Error connecting to backend.",
+          text: "❌ Unable to connect to the server.",
         },
       ]);
     } finally {
@@ -82,8 +76,13 @@ function App() {
     }
   }
 
+  function sendQuickMessage(text) {
+    sendMessage(text);
+  }
+
   return (
     <div className="app">
+
       <Header />
 
       <ChatWindow
@@ -92,12 +91,17 @@ function App() {
         chatEndRef={chatEndRef}
       />
 
+      <QuickActions
+        sendQuickMessage={sendQuickMessage}
+      />
+
       <MessageInput
         message={message}
         setMessage={setMessage}
         sendMessage={sendMessage}
         loading={loading}
       />
+
     </div>
   );
 }

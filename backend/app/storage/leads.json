@@ -7,16 +7,35 @@
     {
         "name": "Ali",
         "phone": "03001234567",
-        "inquiry": "reserve table"
-    },
-    {
-        "name": "Ali",
-        "phone": "03001234567",
-        "inquiry": "reservation"
-    },
-    {
-        "name": "Ali",
-        "phone": "03001234567",
         "inquiry": "table reservation"
+    },
+    {
+        "name": "gulashah",
+        "phone": "0300 9999999",
+        "inquiry": "Reserve a Table"
+    },
+    {
+        "name": "jamil",
+        "phone": "0300 1111111",
+        "inquiry": "booking",
+        "date": null,
+        "time": null,
+        "party_size": null
+    },
+    {
+        "name": "Jamil",
+        "phone": "0300 1111111",
+        "inquiry": "book a table",
+        "date": "parson",
+        "time": "3 bjy",
+        "party_size": 7
+    },
+    {
+        "name": "jerry",
+        "phone": "0300 4444444",
+        "inquiry": "reservation",
+        "date": "tomorrow",
+        "time": "5 pm",
+        "party_size": 2
     }
 ]

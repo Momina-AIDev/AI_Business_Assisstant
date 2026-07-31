@@ -30,11 +30,16 @@ def chat(request: ChatRequest):
         and lead.get("phone")
         and lead.get("intent")
     ):
+        print("Lead extracted:", lead)
         lead_saved = save_lead(
-            name=lead["name"],
-            phone=lead["phone"],
-            inquiry=lead["intent"],
-        )
+    name=lead["name"],
+    phone=lead["phone"],
+    inquiry=lead["intent"],
+    date=lead.get("date"),
+    time=lead.get("time"),
+    party_size=lead.get("party_size"),
+)
+        print("Lead saved:", lead_saved)
 
     if lead_saved:
         reply += """
